@@ -1,0 +1,16 @@
+map_info_start
+
+map_name test
+
+map_author Joseph
+
+map_description caca
+
+map_info_end
+wwwwwwwwww
+w----w-www
+ww-----www
+w--www-www
+w-------ww
+ww---wwwww
+wwwwwwwwww
