@@ -13,7 +13,6 @@ protected:
 
 	int iWidth;
 	int iHeight;
-
 	string sAuthor;
 	string sName;
 	string sDescription;
