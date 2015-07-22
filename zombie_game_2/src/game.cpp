@@ -4,9 +4,9 @@
 Game::Game(sf::RenderWindow& w)
 {
 	selection.colour(22,222,22);
-	scanForMaps();
 	initialiseEntities();
-	generateMap(maps[0]);
+	scanForMaps();
+	generateMap(*maps[0]);
 	m_GameState = eGameState::playing; 
 	m_ModeState = eModeState::editor;
 }
@@ -37,6 +37,7 @@ void Game::scanForMaps()
 void Game::buildMap(int mapNumber)
 {
 	string fileName = "maps/" + sMaps[mapNumber];
+	maps[mapNumber] = creator->createMap();
 	ifstream modelfile(fileName);
 	bool bMapReadingHeader = false;
 	bool bMapReadingLevel = false;
@@ -67,9 +68,9 @@ void Game::buildMap(int mapNumber)
 				for (int i = 0; i < line.length(); i++)
 				{
 					cout<<line[i];
-					maps[mapNumber].setNode(j,i,line[i]);
+					maps[mapNumber]->setNode(j,i,line[i]);
 				}
-					maps[mapNumber].setWidth(line.length());
+					maps[mapNumber]->setWidth(line.length());
 				j++;
 				cout<<""<<endl;
 			}
@@ -83,22 +84,22 @@ void Game::buildMap(int mapNumber)
 				}
 				if (a == "map_name")
 				{
-					maps[mapNumber].setName(b);
+					maps[mapNumber]->setName(b);
 				}
 				else if (a == "map_author")
 				{
-					maps[mapNumber].setAuthor(b);
+					maps[mapNumber]->setAuthor(b);
 				}
 				else if (a == "map_description")
 				{
-					maps[mapNumber].setDescription(b);
+					maps[mapNumber]->setDescription(b);
 				}
 			}
 		}
-		maps[mapNumber].setHeight(j);
+		maps[mapNumber]->setHeight(j);
     }
 	
-	std::cout<<"map "<<maps[mapNumber].name()<<" has been built."<<std::endl;
+	std::cout<<"map "<<maps[mapNumber]->name()<<" has been built."<<std::endl;
 
 	modelfile.close();
 }
@@ -135,6 +136,11 @@ void Game::initialiseEntities()
 	{
 		walls[i] = NULL;
 	}
+
+	for (int i = 0; i<iMaxMaps;i++)
+	{
+		maps[i] = NULL;
+	}
 }
 
 void Game::render(sf::RenderWindow &window)
@@ -162,8 +168,19 @@ void Game::updateGameState(char cKeyPressed, sf::RenderWindow& window)
 			m_GameState = eGameState::paused; 
 
 
-		if (cKeyPressed == 'W')
+		if (cKeyPressed == 'w')
 		{
+
+		}
+
+		if (cKeyPressed == 's')
+		{
+			if (m_ModeState = eModeState::editor)
+			{
+				int iMap = createMap("ass","Joe","lol gay");
+				saveToMap(*maps[iMap]);
+				mapToFile(*maps[iMap]);
+			}
 
 		}
 
@@ -221,4 +238,94 @@ void Game::updateMouseHold(int x, int y)
 	{
 		placeWall(x,y);
 	}
+}
+
+void Game::saveToMap(Map& map)
+{
+	vector2d pos(0,0);
+
+	for (int i = 0; i<iMaxEntities;i++)
+	{
+		if (walls[i] != NULL)
+		{
+			pos.set(walls[i]->nodePosition());
+			map.setNode(pos.x(),pos.y(),'w');
+		}
+	}
+	
+}
+
+int Game::createMap(string sName, string sAuthor, string sDescription)
+{
+	for (int i=0; i<iMaxMaps;i++)
+	{
+		if (maps[i] == NULL)
+		{
+			maps[i]=creator->createMap();
+			vector2d pos;
+			for (int j = 0; j<iMaxEntities;j++)
+			{
+				if ( walls[j] != NULL)
+				{
+						if (maps[i]->width() < walls[j]->nodePosition().x())
+						{
+							maps[i]->setWidth(walls[j]->nodePosition().x()+1);
+						}
+
+						if (maps[i]->height() < walls[j]->nodePosition().y())
+						{
+							maps[i]->setHeight(walls[j]->nodePosition().y()+1);
+						}
+				}
+			}
+
+
+			maps[i]->setName(sName);
+			maps[i]->setAuthor(sAuthor);
+			maps[i]->setDescription(sDescription);
+
+			return i;
+
+		}
+	}
+}
+
+void Game::mapToFile(Map& map)
+{
+  ofstream modelFile;
+  modelFile.open ("maps/" +map.name() + ".txt");
+
+  cout<<"Writing "<<map.name()<<" to a txt file"<<endl;
+
+  //if (modelFile.is_open)
+ // {
+	modelFile << "map_info_start\n";
+
+	modelFile << "map_name "+map.name()+"\n";
+	modelFile << "map_author "+map.author()+"\n";
+	modelFile << "map_description "+map.description()+"\n";
+	modelFile << "map_info_end\n";
+
+
+	for (int i = 0; i < map.width(); i++)
+	{
+		for ( int j = 0; j < map.height(); j++)
+		{
+			if (map.node(i,j) == 'w')
+			{
+				modelFile << "w";
+			}
+			else
+			{
+				modelFile << "-";
+			}
+		}
+			modelFile << "\n";
+	}
+
+
+	 modelFile.close();
+  //}
+
+  cout<<"Finished writing map"<<endl;
 }

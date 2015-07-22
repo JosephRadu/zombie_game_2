@@ -2,6 +2,7 @@
 #define CREATOR_H
 
 #include "wall.h"
+#include "map.h"
 
 class Creator
 {
@@ -12,5 +13,13 @@ public:
 		wall = new Wall(x, y);
 		return wall;
 	}
+
+	Map* createMap()
+	{
+		Map * map;
+		map = new Map();
+		return map;
+	}
+
 };
 #endif

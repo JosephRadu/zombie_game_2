@@ -1,13 +1,15 @@
-﻿Build started 21/07/2015 19:47:19.
+﻿Build started 22/07/2015 21:44:05.
      1>Project "C:\Users\Joseph\Desktop\zombie_game_2\zombie_game_2\zombie_game_2.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I"sfml-main.lib" /I"sfml-system.lib" /I"sfml-graphics.lib" /I"sfml-window.lib" /Ikernel32.lib /Iuser32.lib /Igdi32.lib /Iwinspool.lib /Icomdlg32.lib /Iadvapi32.lib /Ishell32.lib /Iole32.lib /Ioleaut32.lib /Iuuid.lib /Iodbc32.lib /Iodbccp32.lib /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt src\game.cpp src\main.cpp
-         main.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I"sfml-main.lib" /I"sfml-system.lib" /I"sfml-graphics.lib" /I"sfml-window.lib" /Ikernel32.lib /Iuser32.lib /Igdi32.lib /Iwinspool.lib /Icomdlg32.lib /Iadvapi32.lib /Ishell32.lib /Iole32.lib /Ioleaut32.lib /Iuuid.lib /Iodbc32.lib /Iodbccp32.lib /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt src\game.cpp
          game.cpp
-     1>c:\users\joseph\desktop\zombie_game_2\zombie_game_2\src\game.cpp(67): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\joseph\desktop\zombie_game_2\zombie_game_2\src\game.cpp(176): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\joseph\desktop\zombie_game_2\zombie_game_2\src\game.cpp(210): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-         Generating Code...
+     1>c:\users\joseph\desktop\zombie_game_2\zombie_game_2\src\game.cpp(68): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\joseph\desktop\zombie_game_2\zombie_game_2\src\game.cpp(193): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\joseph\desktop\zombie_game_2\zombie_game_2\src\game.cpp(227): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\joseph\desktop\zombie_game_2\zombie_game_2\src\game.cpp(252): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\joseph\desktop\zombie_game_2\zombie_game_2\src\game.cpp(272): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\joseph\desktop\zombie_game_2\zombie_game_2\src\game.cpp(277): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\joseph\desktop\zombie_game_2\zombie_game_2\src\game.cpp(291): warning C4715: 'Game::createMap' : not all control paths return a value
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Joseph\Desktop\zombie_game_2\Debug\zombie_game_2.exe" /INCREMENTAL /NOLOGO /LIBPATH:"./SFML-2.3.1\lib" "sfml-system.lib" "sfml-graphics.lib" "sfml-window.lib" "sfml-main.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Joseph\Desktop\zombie_game_2\Debug\zombie_game_2.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Joseph\Desktop\zombie_game_2\Debug\zombie_game_2.lib" /MACHINE:X86 Debug\ai.obj
          Debug\box.obj
@@ -24,4 +26,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:16.12
+Time Elapsed 00:00:11.00

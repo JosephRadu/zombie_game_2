@@ -1,0 +1,38 @@
+map_info_start
+map_name ass
+map_author Joe
+map_description lol gay
+map_info_end
+wwwwwwwwww------------------------
+w--------w------------------------
+w--------w---------------------w--
+w--------w---------------------w--
+www------w---------------w----ww--
+www------w--------------w--w-www--
+wwwwwwwwww------------www-w--www--
+----------------------ww------ww--
+----------------wwww-www------www-
+----------------w---www-w-----www-
+----------------w--wwww---w---www-
+----------------wwww-w-w-ww---www-
+-----w----------wwww-ww---w---www-
+-----w----------wwwww----w----www-
+-----w---------www----wwwww---www-
+-----wwwwwwwwwwwwwwwwww----w--www-
+-----ww---ww-ww-w------w---w--www-
+------------ww-ww---------ww--ww--
+-----------ww--w----------w---ww--
+---------www---w---w------w---ww--
+---------------w-w-----www----ww--
+---------------w-----w---w----ww--
+---------------w--w---ww------ww--
+-w--w--------w-www--w---------ww--
+------------wwwwwwwwwww-www---ww--
+---------wwwwwwwwww-w-w-------ww--
+wwwwwww-----wwwww--w---w-ww----w--
+--------www-wwwwwwwwwwww-------w--
+------wwwwwwwwwww-w-www--------w--
+--------ww-w-www--ww--ww-------w--
+---------------ww-wwwwww-------w--
+-----------------wwwwwwwwwwwwwww--
+---------------ww-------------ww--

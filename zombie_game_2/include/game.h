@@ -20,36 +20,50 @@ public:
 	static enum eGameState{initialise, playing, paused, end};
 	static enum eModeState{game,editor};
 	Game(sf::RenderWindow& rw);
-	void updateGameState(char cKeyPressed, sf::RenderWindow& ren);
+
 	void render(sf::RenderWindow &window);
-
 	void update();
-	void initialiseEntities();
 
-	// Map handling.
-	int iCurrentMaps;
-	static const int iMaxMaps = 10;
-	void scanForMaps();
-	void buildMap(int mapNumber);
-	string sMaps[iMaxMaps];
-	Map maps[iMaxMaps];
 
-	void generateMap(Map& map);
-	vector2d nodeFromPosition(int x, int y);
+	// Core game
+	vector2d v2dCamera;
 
+
+	// Controls
+	bool bHoldingLeft;
+
+	void updateGameState(char cKeyPressed, sf::RenderWindow& ren);
+	void holdingLeft(bool b);
 	void updateMouseClick(int x, int y);
 	void updateMouseMove(int x, int y);
 	void updateMouseHold(int x, int y);
 
-	vector2d v2dCamera;
+
+	// Map handling.
+	int iCurrentMaps;
+	static const int iMaxMaps = 10;
+	string sMaps[iMaxMaps];
+	Map* maps[iMaxMaps];
+
+	void scanForMaps();
+	void buildMap(int mapNumber);
+	void generateMap(Map& map);
+
+	void createWall(int iNodeX, int iNodeY);
+
+	int createMap(string sName, string sAuthor, string sDescription);
+	void mapToFile(Map& map);
+	void saveToMap(Map& map);
+
+
+	// Node handling
+	vector2d nodeFromPosition(int x, int y);
+
 
 	// Map editor
 	Wall selection;
 	void placeWall(int x, int y);
 
-	// Mouse handling
-	bool bHoldingLeft;
-	void holdingLeft(bool b);
 
 	// Entity handling.
 	Creator* creator;
@@ -58,8 +72,7 @@ public:
 	drawable* entities[iMaxEntities];
 	Wall* walls[iMaxEntities];
 
-		// Walls
-		void createWall(int iNodeX, int iNodeY);
+	void initialiseEntities();
 
 
 protected:
