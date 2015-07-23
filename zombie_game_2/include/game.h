@@ -27,6 +27,7 @@ public:
 
 	// Core game
 	vector2d v2dCamera;
+	vector2d v2dMouse;
 
 
 	// Controls
@@ -48,9 +49,7 @@ public:
 	void scanForMaps();
 	void buildMap(int mapNumber);
 	void generateMap(Map& map);
-
 	void createWall(int iNodeX, int iNodeY);
-
 	int createMap(string sName, string sAuthor, string sDescription);
 	void mapToFile(Map& map);
 	void saveToMap(Map& map);
@@ -63,7 +62,8 @@ public:
 	// Map editor
 	Wall selection;
 	void placeWall(int x, int y);
-
+	void removeWall(vector2d v2d);
+	void mapEditor();
 
 	// Entity handling.
 	Creator* creator;

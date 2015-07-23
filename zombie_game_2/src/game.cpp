@@ -6,9 +6,50 @@ Game::Game(sf::RenderWindow& w)
 	selection.colour(22,222,22);
 	initialiseEntities();
 	scanForMaps();
-	generateMap(*maps[0]);
+	//generateMap(*maps[0]);
 	m_GameState = eGameState::playing; 
 	m_ModeState = eModeState::editor;
+	mapEditor();
+}
+
+void Game::mapEditor()
+{
+	int iSelection;
+	bool bSelected = false;
+
+	cout<<"[][][][][] MAP EDITOR 0.1 [][][][][]"<<endl<<endl;
+
+	for (int i = 0; i < iMaxMaps; i++)
+	{
+		if (maps[i] != NULL)
+		{
+			cout<<"["<<i<<"] | "<<maps[i]->name()<<endl;
+		}
+	}
+
+	cout<<"Input map number."<<endl;
+
+	while (bSelected == false)
+	{
+		cin>>iSelection;
+
+		for (int i = 0; i < iMaxMaps; i++)
+		{
+			if (maps[i] != NULL && i == iSelection)
+			{
+				generateMap(*maps[i]);
+				bSelected = true;
+				break;
+			}
+		}
+
+		if (bSelected == false)
+		{
+			cout<<"Invalid selection."<<endl;
+		}
+
+	}
+
 }
 
 void Game::scanForMaps()
@@ -24,7 +65,7 @@ void Game::scanForMaps()
 			// Ignore empty files basically.
 			if ( file.nFileSizeLow > 0)
 			{
-				std::cout << "Adding "<< file.cFileName << " ... ";
+				//std::cout << "Adding "<< file.cFileName << " ... ";
 				sMaps[iCurrentMaps] = file.cFileName;
 				buildMap(iCurrentMaps);
 				iCurrentMaps++;
@@ -67,12 +108,12 @@ void Game::buildMap(int mapNumber)
 			{
 				for (int i = 0; i < line.length(); i++)
 				{
-					cout<<line[i];
+					//cout<<line[i];
 					maps[mapNumber]->setNode(j,i,line[i]);
 				}
 					maps[mapNumber]->setWidth(line.length());
 				j++;
-				cout<<""<<endl;
+				//cout<<""<<endl;
 			}
 
 			if (bMapReadingHeader == true)
@@ -99,13 +140,14 @@ void Game::buildMap(int mapNumber)
 		maps[mapNumber]->setHeight(j);
     }
 	
-	std::cout<<"map "<<maps[mapNumber]->name()<<" has been built."<<std::endl;
+	//std::cout<<"map "<<maps[mapNumber]->name()<<" has been built."<<std::endl;
 
 	modelfile.close();
 }
 
 void Game::generateMap(Map& map)
 {
+	cout<<"Generating "<<map.name()<<endl;
 	for (int i = 0; i < map.width(); i++)
 	{
 		for ( int j = 0; j < map.height(); j++)
@@ -177,11 +219,26 @@ void Game::updateGameState(char cKeyPressed, sf::RenderWindow& window)
 		{
 			if (m_ModeState = eModeState::editor)
 			{
-				int iMap = createMap("ass","Joe","lol gay");
+				string sName;
+				string sAuthor;
+				string sDescription;
+
+				cout<<"Enter map name"<<endl;
+				cin>>sName;
+				cout<<"Enter author name"<<endl;
+				cin>>sAuthor;
+				cout<<"Enter description name"<<endl;
+				cin>>sDescription;
+
+				int iMap = createMap(sName,sAuthor,sDescription);
 				saveToMap(*maps[iMap]);
 				mapToFile(*maps[iMap]);
 			}
 
+		}
+		else if (cKeyPressed == 'r')
+		{
+			removeWall(nodeFromPosition(v2dMouse.x(),v2dMouse.y()));
 		}
 
 
@@ -196,6 +253,7 @@ vector2d Game::nodeFromPosition(int x, int y)
 
 void Game::updateMouseClick(int x, int y)
 {
+	v2dMouse.set(x,y);
 	if (m_ModeState = eModeState::editor)
 	{
 		placeWall(x,y);
@@ -204,8 +262,25 @@ void Game::updateMouseClick(int x, int y)
 
 void Game::updateMouseMove(int x, int y)
 {
+	v2dMouse.set(x,y);
 	selection.setNodePosition(x/16,y/16);
 }
+
+void Game::removeWall(vector2d v2d)
+{
+	for (int i = 0; i<iMaxEntities;i++)
+	{
+		if ( walls[i] != NULL)
+		{
+			if (v2d == walls[i]->nodePosition())
+			{
+				walls[i] = NULL;
+				return;
+			}
+		}
+	}
+}
+
 
 void Game::placeWall(int x, int y)
 {
@@ -234,6 +309,7 @@ void Game::holdingLeft(bool b)
 
 void Game::updateMouseHold(int x, int y)
 {
+	v2dMouse.set(x,y);
 	if (m_ModeState = eModeState::editor)
 	{
 		placeWall(x,y);
@@ -267,18 +343,20 @@ int Game::createMap(string sName, string sAuthor, string sDescription)
 			{
 				if ( walls[j] != NULL)
 				{
-						if (maps[i]->width() < walls[j]->nodePosition().x())
+						if (maps[i]->width() <= walls[j]->nodePosition().x())
 						{
-							maps[i]->setWidth(walls[j]->nodePosition().x()+1);
+							maps[i]->setWidth(walls[j]->nodePosition().x());
 						}
 
-						if (maps[i]->height() < walls[j]->nodePosition().y())
+						if (maps[i]->height() <= walls[j]->nodePosition().y())
 						{
-							maps[i]->setHeight(walls[j]->nodePosition().y()+1);
+							maps[i]->setHeight(walls[j]->nodePosition().y());
 						}
 				}
 			}
 
+			maps[i]->setHeight(maps[i]->height()+1);
+			maps[i]->setWidth(maps[i]->width()+1);
 
 			maps[i]->setName(sName);
 			maps[i]->setAuthor(sAuthor);

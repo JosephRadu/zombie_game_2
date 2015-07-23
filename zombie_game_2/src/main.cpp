@@ -35,7 +35,12 @@ int main()
                     case sf::Keyboard::W: cKeyPressed = 'w'; break;
                     case sf::Keyboard::A: cKeyPressed = 'a'; break;
                     case sf::Keyboard::S: cKeyPressed = 's'; break;
-                    case sf::Keyboard::D: cKeyPressed = 'd'; break;                
+                    case sf::Keyboard::D: cKeyPressed = 'd'; break;        
+
+						                    
+					
+					case sf::Keyboard::R: cKeyPressed = 'r'; break;  
+
 					case sf::Keyboard::Escape: window.close(); break;
                 }
             }  
