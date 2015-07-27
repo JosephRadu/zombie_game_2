@@ -19,6 +19,7 @@ int main()
 	vector2d v2dCamera(0, 0);
 
 	bool bHoldingLeft = false;
+	bool bHoldingRight = false;
 
     while (window.isOpen())
     {
@@ -45,22 +46,30 @@ int main()
                 }
             }  
 
-
-
-
-
-
 			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 			{
-				game.holdingLeft(true);
-				game.updateMouseClick(event.mouseButton.x,event.mouseButton.y);
+				game.leftMouse(true);
+				game.leftMouseClick(event.mouseButton.x,event.mouseButton.y);
 				bHoldingLeft = true;
 			}
 
 			if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
 			{
-				game.holdingLeft(false);
+				game.leftMouse(false);
 				bHoldingLeft = false;
+			}
+
+			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right)
+			{
+				game.rightMouse(true);
+				game.rightMouseClick(event.mouseButton.x,event.mouseButton.y);
+				bHoldingRight = true;
+			}
+
+			if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Right)
+			{
+				game.rightMouse(false);
+				bHoldingRight = false;
 			}
 
 

@@ -232,7 +232,7 @@ void Game::updateGameState(char cKeyPressed, sf::RenderWindow& window)
 
 				int iMap = createMap(sName,sAuthor,sDescription);
 				saveToMap(*maps[iMap]);
-				mapToFile(*maps[iMap]);
+				mapToFile(*maps[iMap]);	
 			}
 
 		}
@@ -249,15 +249,6 @@ vector2d Game::nodeFromPosition(int x, int y)
 {
 	vector2d v2dResult(x/_iNodeSize,y/_iNodeSize);
 	return v2dResult;
-}
-
-void Game::updateMouseClick(int x, int y)
-{
-	v2dMouse.set(x,y);
-	if (m_ModeState = eModeState::editor)
-	{
-		placeWall(x,y);
-	}
 }
 
 void Game::updateMouseMove(int x, int y)
@@ -302,10 +293,41 @@ void Game::placeWall(int x, int y)
 	createWall(pos.x(),pos.y());
 }
 
-void Game::holdingLeft(bool b)
+void Game::leftMouse(bool b)
 {
-	bHoldingLeft = b;
+	mouse.leftPressed(b);
 }
+
+void Game::leftMouseClick(int x, int y)
+{
+	vector2d v2d(x,y);
+	mouse.leftPressed(true);
+	mouse.setPosition(v2d);
+
+	if (m_ModeState = eModeState::editor)
+	{
+		placeWall(x,y);
+	}
+}
+
+void Game::rightMouse(bool b)
+{
+	mouse.rightPressed(b);
+}
+void Game::rightMouseClick(int x, int y)
+{
+	vector2d v2d(x,y);
+	mouse.rightPressed(true);
+	mouse.setPosition(v2d);
+
+
+
+	if (m_ModeState = eModeState::editor)
+	{
+		removeWall(v2d);
+	}
+}
+
 
 void Game::updateMouseHold(int x, int y)
 {

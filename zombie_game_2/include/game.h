@@ -8,10 +8,10 @@
 #include <sstream>
 
 #include <Windows.h>
-#include "vector2d.h"
 
+#include "mouse.h";
+#include "camera.h";
 #include "map.h"
-
 #include "creator.h"
 
 class Game
@@ -29,13 +29,19 @@ public:
 	vector2d v2dCamera;
 	vector2d v2dMouse;
 
+	Camera camera;
+	Mouse mouse;
+
 
 	// Controls
-	bool bHoldingLeft;
-
 	void updateGameState(char cKeyPressed, sf::RenderWindow& ren);
-	void holdingLeft(bool b);
-	void updateMouseClick(int x, int y);
+
+	void leftMouse(bool b);
+	void leftMouseClick(int x, int y);
+
+	void rightMouse(bool b);
+	void rightMouseClick(int x, int y);
+
 	void updateMouseMove(int x, int y);
 	void updateMouseHold(int x, int y);
 
