@@ -29,12 +29,12 @@ public:
 	vector2d v2dCamera;
 	vector2d v2dMouse;
 
-	Camera camera;
 	Mouse mouse;
 
 
 	// Controls
 	void updateGameState(char cKeyPressed, sf::RenderWindow& ren);
+	void updateInput(sf::Event& eventIn);
 
 	void leftMouse(bool b);
 	void leftMouseClick(int x, int y);
@@ -45,6 +45,10 @@ public:
 	void updateMouseMove(int x, int y);
 	void updateMouseHold(int x, int y);
 
+	// Camera Control
+	Camera camera;
+	void updateCamera(sf::View& sfView);
+	void updateZoom(sf::View& sfView);
 
 	// Map handling.
 	int iCurrentMaps;

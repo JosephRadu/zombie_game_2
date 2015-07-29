@@ -187,6 +187,8 @@ void Game::initialiseEntities()
 
 void Game::render(sf::RenderWindow &window)
 {
+	camera.update();
+
 	for (int i = 0; i<iMaxEntities;i++)
 	{
 		if ( walls[i] != NULL)
@@ -205,15 +207,8 @@ void Game::updateGameState(char cKeyPressed, sf::RenderWindow& window)
 		//update();
 		render(window);
 
-
 		if (cKeyPressed == 0)
 			m_GameState = eGameState::paused; 
-
-
-		if (cKeyPressed == 'w')
-		{
-
-		}
 
 		if (cKeyPressed == 's')
 		{
@@ -428,4 +423,42 @@ void Game::mapToFile(Map& map)
   //}
 
   cout<<"Finished writing map"<<endl;
+}
+
+void Game::updateInput(sf::Event& eventIn)
+{
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+	{
+		camera.setXPanAmount(-camera.cameraSpeed());
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+	{
+		camera.setXPanAmount(camera.cameraSpeed());
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+	{
+		camera.setYPanAmount(-camera.cameraSpeed());
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+	{
+		camera.setYPanAmount(camera.cameraSpeed());
+	}
+
+
+	if (eventIn.type == sf::Event::MouseWheelMoved)
+	{
+		camera.setZoom(camera.zoom()+(-1*(eventIn.mouseWheel.delta*0.005)));
+	}
+
+}
+
+void Game::updateZoom(sf::View& sfView)
+{
+	sfView.zoom(camera.zoom());
+}
+
+void Game::updateCamera(sf::View& sfView)
+{
+	camera.setPosition(camera.position().x()+camera.xPanAmount(),camera.position().y()+camera.yPanAmount());
+	sfView.setCenter(camera.position().x(),camera.position().y());
 }
