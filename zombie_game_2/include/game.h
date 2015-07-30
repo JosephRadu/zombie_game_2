@@ -26,15 +26,14 @@ public:
 
 
 	// Core game
-	vector2d v2dCamera;
-	vector2d v2dMouse;
-
 	Mouse mouse;
 
 
 	// Controls
-	void updateGameState(char cKeyPressed, sf::RenderWindow& ren);
-	void updateInput(sf::Event& eventIn);
+	void renderWorld(sf::RenderWindow& ren);
+	void updateCameraControls(sf::Event& eventIn);
+
+	void updateKeyboardInput(char cKeyPressed);
 
 	void leftMouse(bool b);
 	void leftMouseClick(int x, int y);
@@ -47,6 +46,7 @@ public:
 
 	// Camera Control
 	Camera camera;
+
 	void updateCamera(sf::View& sfView);
 	void updateZoom(sf::View& sfView);
 
@@ -64,16 +64,22 @@ public:
 	void mapToFile(Map& map);
 	void saveToMap(Map& map);
 
-
 	// Node handling
 	vector2d nodeFromPosition(int x, int y);
 
-
 	// Map editor
 	Wall selection;
+	int iSelectedMap;
 	void placeWall(int x, int y);
 	void removeWall(vector2d v2d);
-	void mapEditor();
+
+	void mapEditorHome();
+	void mapEditorOptions();
+	void mapEditorMapSelection();
+	void mapEditorSaveMap();
+	void mapEditorInit();
+
+
 
 	// Entity handling.
 	Creator* creator;

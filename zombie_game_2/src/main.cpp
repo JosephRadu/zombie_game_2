@@ -42,8 +42,25 @@ int main()
             if ((event.type == sf::Event::KeyPressed))
             {
                 switch (event.key.code){
+                    case sf::Keyboard::V: cKeyPressed = 'v'; break;
+                    case sf::Keyboard::R: cKeyPressed = 'r'; break;
+                    case sf::Keyboard::A: cKeyPressed = 'a'; break;
+                    case sf::Keyboard::X: cKeyPressed = 'x'; break;                 
+                    case sf::Keyboard::P: cKeyPressed = 'p'; break;
+                    case sf::Keyboard::S: cKeyPressed = 's'; break;
+                    case sf::Keyboard::T: cKeyPressed = 't'; break;
+                    case sf::Keyboard::F: cKeyPressed = 'f'; break;
+					case sf::Keyboard::Q: cKeyPressed = 'q'; break;
+
+                    case sf::Keyboard::Num1: cKeyPressed = 1; break;
+                    case sf::Keyboard::Num2: cKeyPressed = 2; break;
+                    case sf::Keyboard::Num3: cKeyPressed = 3; break;
+                    case sf::Keyboard::Num4: cKeyPressed = 4; break;
+                    case sf::Keyboard::Num5: cKeyPressed = 5; break;
 					case sf::Keyboard::Escape: window.close(); break;
                 }
+
+				 game.updateKeyboardInput(cKeyPressed);
             }  
 
 			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
@@ -67,9 +84,8 @@ int main()
 			{
 				game.rightMouse(false);
 				bHoldingRight = false;
-
 			}
-				game.updateInput(event);
+
 
 
 			if (event.type == sf::Event::MouseMoved)
@@ -87,14 +103,19 @@ int main()
 				game.updateMouseMove(v2dMousePos.x(),v2dMousePos.y());
 			}
 
-
+			game.updateCameraControls(event);
 
         }
 		window.clear(sf::Color::Black);
-        game.updateGameState(cKeyPressed, window);
+        game.renderWorld(window);
 		game.updateZoom(sfView);
 		game.updateCamera(sfView);
 		window.setView(sfView);
         window.display();
     }
+}
+
+void mouseClockwork()
+{
+
 }

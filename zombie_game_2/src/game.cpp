@@ -9,15 +9,14 @@ Game::Game(sf::RenderWindow& w)
 	//generateMap(*maps[0]);
 	m_GameState = eGameState::playing; 
 	m_ModeState = eModeState::editor;
-	mapEditor();
+	mapEditorInit();
 }
 
-void Game::mapEditor()
+void Game::mapEditorMapSelection()
 {
+	system("cls");
 	int iSelection;
 	bool bSelected = false;
-
-	cout<<"[][][][][] MAP EDITOR 0.1 [][][][][]"<<endl<<endl;
 
 	for (int i = 0; i < iMaxMaps; i++)
 	{
@@ -25,7 +24,14 @@ void Game::mapEditor()
 		{
 			cout<<"["<<i<<"] | "<<maps[i]->name()<<endl;
 		}
+		else
+		{
+			cout<<"["<<i<<"] | "<<"Return to home"<<endl;
+			break;
+		}
 	}
+
+
 
 	cout<<"Input map number."<<endl;
 
@@ -38,16 +44,49 @@ void Game::mapEditor()
 			if (maps[i] != NULL && i == iSelection)
 			{
 				generateMap(*maps[i]);
+				iSelectedMap = i;
 				bSelected = true;
 				break;
 			}
+			else
+			{
+				mapEditorHome();
+			}
 		}
+
+
 
 		if (bSelected == false)
 		{
 			cout<<"Invalid selection."<<endl;
 		}
 
+	}
+}
+
+void Game::mapEditorInit()
+{
+	system("cls");
+	mapEditorHome();
+}
+
+void Game::mapEditorHome()
+{
+	system("cls");
+	cout<<"Map Editor | HOME |"<<endl;
+
+	cout<<"[0] | Map selection"<<endl;
+	cout<<"[1] | Exit"<<endl;
+
+	cout<<"Input option"<<endl;
+
+	int iInput;
+
+	cin>>iInput;
+
+	if (iInput == 0)
+	{
+		mapEditorMapSelection();
 	}
 
 }
@@ -158,6 +197,8 @@ void Game::generateMap(Map& map)
 			}
 		}
 	}
+
+	cout<<"[Q] | Editor options"<<endl;
 }
 
 void Game::createWall(int iNodeX, int iNodeY)
@@ -185,7 +226,7 @@ void Game::initialiseEntities()
 	}
 }
 
-void Game::render(sf::RenderWindow &window)
+void Game::renderWorld(sf::RenderWindow &window)
 {
 	camera.update();
 
@@ -200,43 +241,26 @@ void Game::render(sf::RenderWindow &window)
 	window.draw(selection);
 }
 
-void Game::updateGameState(char cKeyPressed, sf::RenderWindow& window)
+void Game::updateKeyboardInput(char cKeyPressed)
 {
-	if (m_GameState == eGameState::playing)
+	if (m_ModeState = eModeState::editor)
 	{
-		//update();
-		render(window);
-
-		if (cKeyPressed == 0)
-			m_GameState = eGameState::paused; 
-
-		if (cKeyPressed == 's')
+		if (cKeyPressed == 'q')
 		{
-			if (m_ModeState = eModeState::editor)
-			{
-				string sName;
-				string sAuthor;
-				string sDescription;
-
-				cout<<"Enter map name"<<endl;
-				cin>>sName;
-				cout<<"Enter author name"<<endl;
-				cin>>sAuthor;
-				cout<<"Enter description name"<<endl;
-				cin>>sDescription;
-
-				int iMap = createMap(sName,sAuthor,sDescription);
-				saveToMap(*maps[iMap]);
-				mapToFile(*maps[iMap]);	
-			}
-
+			mapEditorOptions();
 		}
 		else if (cKeyPressed == 'r')
 		{
-			removeWall(nodeFromPosition(v2dMouse.x(),v2dMouse.y()));
+			removeWall(nodeFromPosition(mouse.position().x(),mouse.position().y()));
 		}
+	}
+}
 
-
+void Game::render(sf::RenderWindow& window)
+{
+	if (m_GameState == eGameState::playing)
+	{
+		render(window);
 	}	
 }
 
@@ -248,7 +272,7 @@ vector2d Game::nodeFromPosition(int x, int y)
 
 void Game::updateMouseMove(int x, int y)
 {
-	v2dMouse.set(x,y);
+	mouse.setPosition(x,y);
 	selection.setNodePosition(x/16,y/16);
 }
 
@@ -267,7 +291,6 @@ void Game::removeWall(vector2d v2d)
 	}
 }
 
-
 void Game::placeWall(int x, int y)
 {
 	vector2d pos(nodeFromPosition(x,y));
@@ -278,13 +301,13 @@ void Game::placeWall(int x, int y)
 		{
 			if (pos == walls[i]->nodePosition())
 			{
-				cout<<"wall already there."<<endl;
+				//cout<<"wall already there."<<endl;
 				return;
 			}
 		}
 	}
 	
-	cout<<"wall created at node "<< pos.x() << " "<< pos.y()<<endl;
+	//cout<<"wall created at node "<< pos.x() << " "<< pos.y()<<endl;
 	createWall(pos.x(),pos.y());
 }
 
@@ -297,7 +320,6 @@ void Game::leftMouseClick(int x, int y)
 {
 	vector2d v2d(x,y);
 	mouse.leftPressed(true);
-	mouse.setPosition(v2d);
 
 	if (m_ModeState = eModeState::editor)
 	{
@@ -309,11 +331,12 @@ void Game::rightMouse(bool b)
 {
 	mouse.rightPressed(b);
 }
+
 void Game::rightMouseClick(int x, int y)
 {
 	vector2d v2d(x,y);
 	mouse.rightPressed(true);
-	mouse.setPosition(v2d);
+
 
 
 
@@ -323,10 +346,8 @@ void Game::rightMouseClick(int x, int y)
 	}
 }
 
-
 void Game::updateMouseHold(int x, int y)
 {
-	v2dMouse.set(x,y);
 	if (m_ModeState = eModeState::editor)
 	{
 		placeWall(x,y);
@@ -425,7 +446,7 @@ void Game::mapToFile(Map& map)
   cout<<"Finished writing map"<<endl;
 }
 
-void Game::updateInput(sf::Event& eventIn)
+void Game::updateCameraControls(sf::Event& eventIn)
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
@@ -461,4 +482,57 @@ void Game::updateCamera(sf::View& sfView)
 {
 	camera.setPosition(camera.position().x()+camera.xPanAmount(),camera.position().y()+camera.yPanAmount());
 	sfView.setCenter(camera.position().x(),camera.position().y());
+}
+
+void Game::mapEditorOptions()
+{
+	system("cls");
+
+	cout<<"Map Editor | Editor |"<<endl;
+
+	cout<<"[0] | Save map"<<endl;
+	cout<<"[1] | Clear map"<<endl;
+	cout<<"[2] | Exit to map editor home"<<endl<<endl;
+
+	cout<<"Input option"<<endl;
+
+	int iInput;
+
+	cin>>iInput;
+
+	if (iInput == 0)
+	{
+		mapEditorSaveMap();
+	}
+	else if (iInput == 1)
+	{
+		initialiseEntities();
+	}
+	else if (iInput == 2)
+	{
+		mapEditorHome();
+	}
+	else
+	{
+		mapEditorHome();
+	}
+}
+
+void Game::mapEditorSaveMap()
+{
+	system("cls");
+	string sName;
+	string sAuthor;
+	string sDescription;
+
+	cout<<"Enter map name"<<endl;
+	cin>>sName;
+	cout<<"Enter author name"<<endl;
+	cin>>sAuthor;
+	cout<<"Enter description name"<<endl;
+	cin>>sDescription;
+
+	int iMap = createMap(sName,sAuthor,sDescription);
+	saveToMap(*maps[iMap]);
+	mapToFile(*maps[iMap]);	
 }

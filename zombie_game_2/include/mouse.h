@@ -21,6 +21,7 @@ public:
 	void setX(float x);
 	void setY(float y);
 	void setPosition(vector2d v2dPos);
+	void setPosition(float x, float y);
 
 	vector2d position();
 

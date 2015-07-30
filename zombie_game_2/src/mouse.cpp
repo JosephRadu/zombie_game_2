@@ -36,6 +36,10 @@ void Mouse::setPosition(vector2d v2dPos)
 {
 	v2dPosition.set(v2dPos);
 }
+void Mouse::setPosition(float x, float y)
+{
+	v2dPosition.set(x,y);
+}
 
 vector2d Mouse::position()
 {
