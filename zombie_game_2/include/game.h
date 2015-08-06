@@ -36,13 +36,13 @@ public:
 	void updateKeyboardInput(char cKeyPressed);
 
 	void leftMouse(bool b);
-	void leftMouseClick(int x, int y);
+	void leftMouseClick(float x, float y);
 
 	void rightMouse(bool b);
-	void rightMouseClick(int x, int y);
+	void rightMouseClick(float x, float y);
 
-	void updateMouseMove(int x, int y);
-	void updateMouseHold(int x, int y);
+	void updateMouseMove(float x, float y);
+	void updateMouseHold(float x, float y);
 
 	// Camera Control
 	Camera camera;
@@ -59,7 +59,14 @@ public:
 	void scanForMaps();
 	void buildMap(int mapNumber);
 	void generateMap(Map& map);
-	void createWall(int iNodeX, int iNodeY);
+
+
+	void createBrush(int iNodeX, int iNodeY, char c);
+	void placeBrush(float x, float y, char c);
+	void removeBrush(vector2d v2d);
+
+
+
 	int createMap(string sName, string sAuthor, string sDescription);
 	void mapToFile(Map& map);
 	void saveToMap(Map& map);
@@ -69,9 +76,10 @@ public:
 
 	// Map editor
 	Wall selection;
+
+	char cSelectedBrush;
 	int iSelectedMap;
-	void placeWall(int x, int y);
-	void removeWall(vector2d v2d);
+
 
 	void mapEditorHome();
 	void mapEditorOptions();
@@ -79,14 +87,21 @@ public:
 	void mapEditorSaveMap();
 	void mapEditorInit();
 
+	void switchBrush(int i);
+
 
 
 	// Entity handling.
 	Creator* creator;
-	int iCurrentEntities;
-	static const int iMaxEntities = 512;
-	drawable* entities[iMaxEntities];
-	Wall* walls[iMaxEntities];
+
+	static const int iMaxWalls = 1024;
+	static const int iMaxBreakables = 128;
+	static const int iMaxHumans = 128;
+
+	//drawable* entities[iMaxEntities];
+	Wall* walls[iMaxWalls];
+	Breakable* breakables[iMaxBreakables];
+	Human* humans[iMaxHumans];
 
 	void initialiseEntities();
 

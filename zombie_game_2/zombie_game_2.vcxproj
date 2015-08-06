@@ -72,11 +72,13 @@
   <ItemGroup>
     <ClCompile Include="src\ai.cpp" />
     <ClCompile Include="src\box.cpp" />
+    <ClCompile Include="src\breakable.cpp" />
     <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\drawable.cpp" />
     <ClCompile Include="src\entity.cpp" />
     <ClCompile Include="src\game.cpp" />
     <ClCompile Include="src\global.cpp" />
+    <ClCompile Include="src\human.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\map.cpp" />
     <ClCompile Include="src\mouse.cpp" />
@@ -86,12 +88,14 @@
   <ItemGroup>
     <ClInclude Include="include\ai.h" />
     <ClInclude Include="include\box.h" />
+    <ClInclude Include="include\breakable.h" />
     <ClInclude Include="include\camera.h" />
     <ClInclude Include="include\creator.h" />
     <ClInclude Include="include\drawable.h" />
     <ClInclude Include="include\entity.h" />
     <ClInclude Include="include\game.h" />
     <ClInclude Include="include\global.h" />
+    <ClInclude Include="include\human.h" />
     <ClInclude Include="include\map.h" />
     <ClInclude Include="include\mouse.h" />
     <ClInclude Include="include\vector2d.h" />

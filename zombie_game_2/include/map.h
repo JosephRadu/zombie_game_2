@@ -8,7 +8,7 @@ using namespace std;
 class Map
 {
 protected:
-	static const int iWorldSize = 64;
+	static const int iWorldSize = 256;
 	char world[iWorldSize][iWorldSize];
 
 	int iWidth;

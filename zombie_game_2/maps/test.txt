@@ -1,9 +1,0 @@
-map_info_start
-map_name test
-map_author Joe
-map_description lol gay
-map_info_end
----w
--w-w
----w
-wwww

@@ -9,6 +9,7 @@ Game::Game(sf::RenderWindow& w)
 	//generateMap(*maps[0]);
 	m_GameState = eGameState::playing; 
 	m_ModeState = eModeState::editor;
+	cSelectedBrush = 'w';
 	mapEditorInit();
 }
 
@@ -28,6 +29,7 @@ void Game::mapEditorMapSelection()
 		{
 			cout<<"["<<i<<"] | "<<"Return to home"<<endl;
 			break;
+
 		}
 	}
 
@@ -193,7 +195,15 @@ void Game::generateMap(Map& map)
 		{
 			if (map.node(i,j) == 'w')
 			{
-				createWall(i,j);
+				createBrush(i,j,'w');
+			}
+			else if (map.node(i,j) == 'b')
+			{
+				createBrush(i,j,'b');
+			}
+			else if (map.node(i,j) == 'h')
+			{
+				createBrush(i,j,'h');
 			}
 		}
 	}
@@ -201,21 +211,48 @@ void Game::generateMap(Map& map)
 	cout<<"[Q] | Editor options"<<endl;
 }
 
-void Game::createWall(int iNodeX, int iNodeY)
+void Game::createBrush(int iNodeX, int iNodeY, char c)
 {
-	for (int i = 0; i<iMaxEntities;i++)
+	if (c == 'w')
 	{
-		if(walls[i] == NULL)
+		for (int i = 0; i<iMaxWalls;i++)
 		{
-			walls[i] = creator->createWall(iNodeX,iNodeY);
-			return;
+			if(walls[i] == NULL)
+			{
+				walls[i] = creator->createWall(iNodeX,iNodeY);
+				return;
+			}
 		}
 	}
+	else if (c == 'b')
+	{
+		for (int i = 0; i<iMaxBreakables;i++)
+		{
+			if(breakables[i] == NULL)
+			{
+				breakables[i] = creator->createBreakable(iNodeX,iNodeY);
+				return;
+			}
+		}
+	}
+	else if (c == 'h')
+	{
+		for (int i = 0; i<iMaxHumans;i++)
+		{
+			if(humans[i] == NULL)
+			{
+				humans[i] = creator->createHuman(iNodeX,iNodeY);
+				return;
+			}
+		}
+	}
+
+
 }
 
 void Game::initialiseEntities()
 {
-	for (int i = 0; i<iMaxEntities;i++)
+	for (int i = 0; i<iMaxWalls;i++)
 	{
 		walls[i] = NULL;
 	}
@@ -224,19 +261,50 @@ void Game::initialiseEntities()
 	{
 		maps[i] = NULL;
 	}
+
+	for (int i = 0; i<iMaxBreakables;i++)
+	{
+		breakables[i] = NULL;
+	}
+
+	for (int i = 0; i<iMaxHumans;i++)
+	{
+		humans[i] = NULL;
+	}
 }
 
 void Game::renderWorld(sf::RenderWindow &window)
 {
 	camera.update();
 
-	for (int i = 0; i<iMaxEntities;i++)
+	for (int i = 0; i<iMaxWalls;i++)
 	{
-		if ( walls[i] != NULL)
+		if (walls[i] != NULL)
 		{
 			window.draw(*walls[i]);
 		}
+		//else break;
 	}
+
+	for (int i = 0; i<iMaxBreakables;i++)
+	{
+		if (breakables[i] != NULL)
+		{
+			window.draw(*breakables[i]);
+		}
+		//else break;
+	}
+
+	for (int i = 0; i<iMaxHumans;i++)
+	{
+		if (humans[i] != NULL)
+		{
+			window.draw(*humans[i]);
+		}
+		//else break;
+	}
+
+
 
 	window.draw(selection);
 }
@@ -245,14 +313,11 @@ void Game::updateKeyboardInput(char cKeyPressed)
 {
 	if (m_ModeState = eModeState::editor)
 	{
-		if (cKeyPressed == 'q')
-		{
-			mapEditorOptions();
-		}
-		else if (cKeyPressed == 'r')
-		{
-			removeWall(nodeFromPosition(mouse.position().x(),mouse.position().y()));
-		}
+		if (cKeyPressed == 'q') mapEditorOptions();
+		else if (cKeyPressed == 'r') removeBrush(nodeFromPosition(selection.position().x(),selection.position().y()));
+		else if (cKeyPressed == 1) switchBrush(1);
+		else if (cKeyPressed == 2) switchBrush(2);
+		else if (cKeyPressed == 3) switchBrush(3);
 	}
 }
 
@@ -270,15 +335,15 @@ vector2d Game::nodeFromPosition(int x, int y)
 	return v2dResult;
 }
 
-void Game::updateMouseMove(int x, int y)
+void Game::updateMouseMove(float x, float y)
 {
 	mouse.setPosition(x,y);
-	selection.setNodePosition(x/16,y/16);
+	selection.setPosition(x,y);
 }
 
-void Game::removeWall(vector2d v2d)
+void Game::removeBrush(vector2d v2d)
 {
-	for (int i = 0; i<iMaxEntities;i++)
+	for (int i = 0; i<iMaxWalls;i++)
 	{
 		if ( walls[i] != NULL)
 		{
@@ -289,41 +354,116 @@ void Game::removeWall(vector2d v2d)
 			}
 		}
 	}
-}
 
-void Game::placeWall(int x, int y)
-{
-	vector2d pos(nodeFromPosition(x,y));
-
-	for (int i = 0; i<iMaxEntities;i++)
+	for (int i = 0; i<iMaxBreakables;i++)
 	{
-		if ( walls[i] != NULL)
+		if ( breakables[i] != NULL)
 		{
-			if (pos == walls[i]->nodePosition())
+			if (v2d == breakables[i]->nodePosition())
 			{
-				//cout<<"wall already there."<<endl;
+				breakables[i] = NULL;
 				return;
 			}
 		}
 	}
-	
-	//cout<<"wall created at node "<< pos.x() << " "<< pos.y()<<endl;
-	createWall(pos.x(),pos.y());
+
+	for (int i = 0; i<iMaxHumans;i++)
+	{
+		if ( humans[i] != NULL)
+		{
+			if (v2d == humans[i]->nodePosition())
+			{
+				humans[i] = NULL;
+				return;
+			}
+		}
+	}
 }
 
+void Game::placeBrush(float x, float y, char c)
+{
+	vector2d pos(nodeFromPosition(x,y));
+
+
+		for (int i = 0; i<iMaxWalls;i++)
+		{
+			if ( walls[i] != NULL)
+			{
+				if (pos == walls[i]->nodePosition())
+				{
+					//cout<<"wall already there."<<endl;
+					return;
+				}
+			}
+		}
+
+
+		for (int i = 0; i<iMaxBreakables;i++)
+		{
+			if ( breakables[i] != NULL)
+			{
+				if (pos == breakables[i]->nodePosition())
+				{
+					//cout<<"wall already there."<<endl;
+					return;
+				}
+			}
+		}
+
+		for (int i = 0; i<iMaxHumans;i++)
+		{
+			if ( humans[i] != NULL)
+			{
+				if (pos == humans[i]->nodePosition())
+				{
+					//cout<<"wall already there."<<endl;
+					return;
+				}
+			}
+		}
+	vector2d v2d(nodeFromPosition(selection.position().x(),selection.position().y()));
+
+	createBrush(v2d.x(),v2d.y(),c);
+
+	//cout<<"wall created at node "<< pos.x() << " "<< pos.y()<<endl;
+
+}
+
+void Game::switchBrush(int i)
+{
+	//cout<<i<<endl;
+	if (i == 1)
+	{
+		cSelectedBrush = 'w';
+		cout<<"Brush | WALL | selected."<<endl;
+	}
+	else if (i == 2)
+	{
+		cSelectedBrush = 'b';
+		cout<<"Brush | BREAKABLE | selected."<<endl;
+	}
+	else if (i == 3)
+	{
+		cSelectedBrush = 'h';
+		cout<<"Brush | HUMAN | selected."<<endl;
+	}
+
+
+}
 void Game::leftMouse(bool b)
 {
 	mouse.leftPressed(b);
 }
 
-void Game::leftMouseClick(int x, int y)
+void Game::leftMouseClick(float x, float y)
 {
-	vector2d v2d(x,y);
+	mouse.setPosition(x,y);
+	selection.setPosition(x,y);
 	mouse.leftPressed(true);
 
 	if (m_ModeState = eModeState::editor)
 	{
-		placeWall(x,y);
+		placeBrush(selection.position().x(),selection.position().y(),cSelectedBrush);
 	}
 }
 
@@ -332,7 +472,7 @@ void Game::rightMouse(bool b)
 	mouse.rightPressed(b);
 }
 
-void Game::rightMouseClick(int x, int y)
+void Game::rightMouseClick(float x, float y)
 {
 	vector2d v2d(x,y);
 	mouse.rightPressed(true);
@@ -342,15 +482,18 @@ void Game::rightMouseClick(int x, int y)
 
 	if (m_ModeState = eModeState::editor)
 	{
-		removeWall(v2d);
+		removeBrush(nodeFromPosition(selection.position().x(),selection.position().y()));
 	}
 }
 
-void Game::updateMouseHold(int x, int y)
+void Game::updateMouseHold(float x, float y)
 {
+	mouse.setPosition(x,y);
+	selection.setPosition(x,y);
+
 	if (m_ModeState = eModeState::editor)
 	{
-		placeWall(x,y);
+		placeBrush(selection.position().x(),selection.position().y(),cSelectedBrush);
 	}
 }
 
@@ -358,12 +501,30 @@ void Game::saveToMap(Map& map)
 {
 	vector2d pos(0,0);
 
-	for (int i = 0; i<iMaxEntities;i++)
+	for (int i = 0; i<iMaxWalls;i++)
 	{
 		if (walls[i] != NULL)
 		{
 			pos.set(walls[i]->nodePosition());
 			map.setNode(pos.x(),pos.y(),'w');
+		}
+	}
+
+	for (int i = 0; i<iMaxBreakables;i++)
+	{
+		if (breakables[i] != NULL)
+		{
+			pos.set(breakables[i]->nodePosition());
+			map.setNode(pos.x(),pos.y(),'b');
+		}
+	}
+
+	for (int i = 0; i<iMaxHumans;i++)
+	{
+		if (humans[i] != NULL)
+		{
+			pos.set(humans[i]->nodePosition());
+			map.setNode(pos.x(),pos.y(),'h');
 		}
 	}
 	
@@ -377,7 +538,7 @@ int Game::createMap(string sName, string sAuthor, string sDescription)
 		{
 			maps[i]=creator->createMap();
 			vector2d pos;
-			for (int j = 0; j<iMaxEntities;j++)
+			for (int j = 0; j<iMaxWalls;j++)
 			{
 				if ( walls[j] != NULL)
 				{
@@ -392,6 +553,39 @@ int Game::createMap(string sName, string sAuthor, string sDescription)
 						}
 				}
 			}
+
+			for (int j = 0; j<iMaxBreakables;j++)
+			{
+				if ( breakables[j] != NULL)
+				{
+						if (maps[i]->width() <= breakables[j]->nodePosition().x())
+						{
+							maps[i]->setWidth(breakables[j]->nodePosition().x());
+						}
+
+						if (maps[i]->height() <= breakables[j]->nodePosition().y())
+						{
+							maps[i]->setHeight(breakables[j]->nodePosition().y());
+						}
+				}
+			}
+
+			for (int j = 0; j<iMaxHumans;j++)
+			{
+				if ( humans[j] != NULL)
+				{
+						if (maps[i]->width() <= humans[j]->nodePosition().x())
+						{
+							maps[i]->setWidth(humans[j]->nodePosition().x());
+						}
+
+						if (maps[i]->height() <= humans[j]->nodePosition().y())
+						{
+							maps[i]->setHeight(humans[j]->nodePosition().y());
+						}
+				}
+			}
+
 
 			maps[i]->setHeight(maps[i]->height()+1);
 			maps[i]->setWidth(maps[i]->width()+1);
@@ -430,6 +624,14 @@ void Game::mapToFile(Map& map)
 			if (map.node(i,j) == 'w')
 			{
 				modelFile << "w";
+			}
+			else if (map.node(i,j) == 'b')
+			{
+				modelFile << "b";
+			}
+			else if (map.node(i,j) == 'h')
+			{
+				modelFile << "h";
 			}
 			else
 			{
